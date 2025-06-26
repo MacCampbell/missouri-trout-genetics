@@ -19,7 +19,7 @@ library(ggrepel)
 library(ggtree)
 ```
 
-This file generates the tree in Figure 2 of the associated publication. The 
+This file generates the tree in Figure 2 of the associated publication. 
 
 # This file is raw data provided by Anthony Clemento at NOAA SWFSC
 ```{r, eval=FALSE}
