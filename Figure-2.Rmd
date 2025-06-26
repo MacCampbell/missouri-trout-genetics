@@ -1,0 +1,301 @@
+---
+title: "Figure 2"
+output: html_document
+date: "2026-06-26"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+```
+
+
+```{r}
+library(tidyverse)
+library(ape)
+library(adegenet)
+library(phytools)
+library(poppr)
+library(ggrepel)
+library(ggtree)
+```
+
+This file generates the tree in Figure 2 of the associated publication. The 
+
+# This file is raw data provided by Anthony Clemento at NOAA SWFSC
+```{r, eval=FALSE}
+noaa<-read_csv("data/hap2col-noaa.csv")
+noaa
+```
+
+# This file is raw data provided by Jeff Rodzen at CDFW
+
+```{r, eval=FALSE}
+cdfw<-read_csv("data/hap2col-cdfw.csv")
+cdfw
+```
+
+## Here are intermediate files not necessary for the figure
+```{r, eval=FALSE}
+noaa %>% dplyr::select(group) %>% group_by(group) %>%  summarize(Count=n()) %>% write_tsv("outputs/405/noaa-groups.tsv")
+
+subbers<-read_tsv("outputs/405/noaa-to-keep.txt")
+noaasub<-noaa %>% filter(group %in% subbers$group )  %>% filter(!group %in% c("ColdCynCk","SpringCk"))
+noaasamples<-noaasub %>% group_by(group) %>% summarize(Count=n()) %>% mutate(Source="LeGall et al. 2024")
+```
+
+
+```{r, eval=FALSE}
+mometa<-read_csv("meta/complete redband data.csv") %>% dplyr::select( `Sample ID`, Location)
+mo<-cdfw %>% filter(group %in% c("MO-trout")) %>% left_join(mometa, by=c("indiv.ID"="Sample ID")) %>%
+  select(-group) %>% rename(group=Location) %>% relocate(group)  #%>%  filter(group %in% c("Crane Creek", "Mill Creek","North ForkOf the White","Spring Creek"))
+csub<-filter(cdfw, group %in% c("FRH_Steelhead","RT_Pit","RT_Kamloops","RT_Shasta","RT_Hot_Creek")) #"RT_Coleman",
+```
+
+```{r, eval=FALSE}
+redbands<-read_csv("data/cdfw-redband-data.csv") %>% dplyr::select(ind1, Location)
+reds<-cdfw %>% filter(`indiv.ID` %in% redbands$ind1 ) %>% left_join(redbands, by=c("indiv.ID"="ind1")) %>%
+  dplyr::select(-group) %>% rename(group=Location) %>% relocate(group)
+mrrt<-read_csv("meta/mrrt-meta.csv") %>% select(Sample_ID, Location)
+mrrts<-cdfw %>% filter(`indiv.ID` %in% mrrt$Sample_ID ) %>% left_join(mrrt, by=c("indiv.ID"="Sample_ID")) %>%
+  dplyr::select(-group) %>% rename(group=Location) %>% relocate(group) %>% filter(!group %in% c("MOOSEHEAD CREEK","Sheepheaven Creek"))
+```
+
+Get CA Groups for Jeff
+```{r, eval=FALSE}
+caligroups<-bind_rows(csub,reds,mrrts)
+caligroups %>% group_by(group) %>% summarize(Count=n())
+
+calisamples<-caligroups %>% group_by(group) %>% summarize(Count=n()) %>% mutate(Source="Unpublished CDFW")
+calisamples
+```
+```{r, eval=FALSE}
+mosamples<-mo %>% group_by(group) %>% summarize(Count=n()) %>% mutate(Source="This Study")
+
+calinoaa<-bind_rows(noaasamples,calisamples,mosamples) %>% left_join(read_csv("meta/tree-labels.csv"), by=c("group"="label")) %>% select(group, NewLabel, Count, Phylogroup, Source) 
+
+save(calinoaa, file="meta/calinoaa.rda")
+```
+
+
+```{r, eval=FALSE}
+merge<-bind_rows(noaasub,mo,csub,reds,mrrts)
+```
+
+# Converting to numeric data
+AC says "You need to go back to the raw haplotypes (ATGCs), combine them all in a tibble, then we just gather all of the unique observed haplotypes across loci in the dataset, enumerate them and then join those back onto the original haplotypes to convert to numbers. That's why you can see the same allele number in different loci, indicating that those actually had the same haplo-string. Lemme know if you need to chat about it."
+
+
+```{r, eval=FALSE}
+haplos<-merge %>% select(-group, -indiv.ID) %>%
+ unlist() %>% as_data_frame() %>% unique() %>% 
+ na.omit() %>% mutate(hap=1:n())
+haplos$hap<-formatC(haplos$hap, width = 3, format = "d", flag = "0")
+haplos
+```
+
+```{r, eval=FALSE}
+ Recode<-function(x, old, new) {
+   x[x %in% old] <- new[match(x, old, nomatch = 0)]
+   return(x)
+ }
+```
+
+Applying to all columns (shouldn't change grou, indiv.ID)
+
+```{r, eval=FALSE}
+old<-haplos$value
+new<-haplos$hap
+merge2<-sapply(merge, Recode, old, new)
+merge2<-merge2 %>% as_data_frame()
+
+tabular<-merge2
+write_csv(tabular, file="outputs/405/tabular-data.csv")
+## This tabular data is Supplemental Table S1
+
+location<-read_csv("data/ancestral-latitude-base-data-edited.csv")
+tabular %>% dplyr::select(group) %>% group_by(group) %>% summarize(Count=n()) %>% left_join(location, by=c("group"="Pop")) %>%  write_csv("outputs/405/tabular-groups.csv")
+```
+
+Remove omy05 linked markers
+```{r, eval=FALSE}
+vector<-c("tag_id_159","tag_id_1614","tag_id_1891","tag_id_278","tag_id_2930","tag_id_3152", "tag_id_3282","tag_id_3420","tag_id_3862","tag_id_4529","tag_id_4559","tag_id_4933","tag_id_5746",
+          "tag_id_613","tag_id_1521")
+merge3<-merge2 %>% select(!starts_with(vector))
+
+```
+Convert to genind
+
+```{r, eval=FALSE}
+test<-merge3 %>% select(-group)
+ncol(test)
+
+```
+
+```{r, eval=FALSE}
+colnames(test)<-paste0("X",seq(1,ncol(test)))
+```
+
+```{r, eval=FALSE}
+test2<-test |>
+    pivot_longer(-X1,
+                 names_prefix = "X",
+                 names_transform = as.numeric) |>
+    mutate(name = if_else(name %% 2 == 1, name - 1, name)) |>
+    pivot_wider(names_from = name,
+                names_prefix = "X",
+                values_fn = ~ paste0(., collapse = "/"))
+
+test2
+```
+
+
+
+```{r, eval=FALSE}
+pop<-merge3 %>% select(group)
+pop$Pop<-as.factor(pop$group)
+pop$Ind<-test2$X1
+```
+
+
+
+```{r, eval=FALSE}
+obj<-df2genind(test2[2:ncol(test2)], sep="/", NA.char = "NA", ploidy=2, type="codom", ncode = 3, pop=as.factor(pop$Pop), ind.names = pop$Ind)
+```
+
+looses completely missing data individuals
+
+```{r, eval=FALSE}
+save(obj, file="outputs/data/obj.rda")
+```
+
+# Loading data files for figure
+```{r}
+load("data/obj.rda")
+load("meta/calinoaa.rda")
+```
+
+```{r}
+tree1<-aboot(obj, strata=obj@pop, tree="nj",distance="edwards.dist",missing="mean", cutoff=25, sample=100) 
+t2<-root(tree1, "NFSmithRcut")
+t<-ggtree(t2)
+t + geom_tiplab() +
+  geom_nodelab() +
+  geom_treescale()+
+  xlim(0,.7)
+
+ggsave("outputs/Figure-2/mo-split-with-noaa-test.pdf", width=6, height=8)
+```
+
+
+some pops are huge. Can downsample.
+
+```{r}
+pops<-obj@pop %>% as_tibble() %>% rename(Population=value)
+inds<-indNames(obj) %>% as_tibble() %>% rename(Individual=value)
+inds<-inds[1:nrow(pops),]
+filter<-bind_cols(inds,pops)
+obj2<-obj
+obj2@other<-filter
+highs<-filter %>% group_by(Population) %>% summarize(Count=n()) %>% filter(Count>40)
+#subsample pops in highs
+
+subs<-filter %>% filter(Population %in% highs$Population) %>% group_by(Population) %>% sample_n(40)
+#takes 1250 to 680 inds
+nosubs<-filter %>% filter(!Population %in% highs$Population) 
+
+tokeep<-bind_rows(nosubs,subs)
+obj2<-obj2[obj2@other$Individual %in% tokeep$Individual,]
+obj2
+```
+```{r}
+tree2<-aboot(obj2, strata=obj2@pop, tree="nj",distance="edwards.dist",missing="mean", cutoff=25, sample=100) 
+
+t4<-ggtree(root(tree2,"NFSmithRcut"))
+t4<-ggtree(midpoint.root(tree2))
+
+t4 + geom_tiplab() +
+  geom_nodelab() +
+  geom_treescale()+
+  xlim(0,.7)
+ggsave("outputs/Figure-2/mo-split-with-noaa-dowsampled-pops.jpeg", width=6, height=8)
+ggsave("outputs/Figure-2/mo-split-with-noaa-dowsampled-pops.pdf", width=6, height=8)
+```
+
+
+```{r}
+obj3<-missingno(obj2, type = "genotypes", cutoff = 0.25)
+mins<-obj3@pop %>% as_tibble() %>% group_by(value) %>% summarize(Count=n()) %>% arrange(Count) %>% filter(Count>5)
+
+obj3@pop %>% as_tibble() %>% group_by(value) %>% summarize(Count=n()) %>% arrange(Count) %>% filter(Count<=5)
+
+obj3<-obj3[obj3@pop %in% mins$value]
+```
+
+```{r}
+tree2<-aboot(obj3, strata=obj3@pop, tree="nj",distance="edwards.dist",missing="mean", cutoff=0, sample=1000) 
+
+t4<-ggtree(root(tree2,"NFSmithRcut"))
+t4<-ggtree(midpoint.root(tree2))
+
+t4 + geom_tiplab() +
+  geom_nodelab() +
+  geom_treescale()+
+  xlim(0,.7)
+ggsave("outputs/Figure-2/mo-split-with-noaa-dowsampled-pops.jpeg", width=6, height=8)
+ggsave("outputs/Figure-2/mo-split-with-noaa-dowsampled-pops.pdf", width=6, height=8)
+
+```
+
+```{r}
+tips<-read_csv("meta/tree-labels.csv")
+
+t4 %<+% tips + geom_tiplab(aes(label=NewLabel)) +
+#  geom_point(data=t4$data %>% filter(isTip==FALSE),aes(x=x, y=y, fill=as.numeric(label)),
+ #            pch=21, cex=4, alpha=1) +
+  geom_tippoint(aes(color=Phylogroup),x=0.7, pch=15, cex=5, alpha=0.95) +
+  geom_text(data=t4$data, aes(label=round(as.numeric(label)))) +
+#  scale_fill_viridis_c(option="magma", na.value = "black")+
+  scale_colour_viridis_d(option="H") +
+  geom_treescale()+
+  
+  xlim(0,.7)
+
+ggsave("outputs/Figure-2/mo-split-with-noaa-dowsampled-pops-newtips.jpeg", width=8.5, height=11)
+ggsave("outputs/Figure-2/mo-split-with-noaa-dowsampled-pops-newtips.pdf", width=8.5, height=11)
+
+```
+
+
+```{r}
+tree2<-aboot(obj3, strata=obj3@pop, tree="nj",distance="prevosti.dist",missing="mean", cutoff=0, sample=1000) 
+
+t4<-
+
+t4<-ggtree(midpoint.root(tree2))
+
+tips<-read_csv("meta/tree-labels.csv")
+# create sample sizes
+```
+
+```{r}
+sizes<-obj3@pop %>% as_tibble() %>% rename(label=value) %>% group_by(label) %>% summarize(`Sample Size`=n())
+tips <- tips %>% left_join(sizes)
+
+calinoaa %>% left_join(sizes, by=c("group"="label")) %>% select(group, NewLabel, Count, `Sample Size`, Phylogroup, Source) %>% write_csv("meta/cali-noaa-samples.csv")
+t4 %<+% tips + 
+#  geom_point(data=t4$data %>% filter(isTip==FALSE),aes(x=x, y=y, fill=as.numeric(label)),
+ #            pch=21, cex=4, alpha=1) +
+  geom_tippoint(aes(color=Phylogroup),x=0.7, pch=15, cex=5, alpha=0.95) +
+  geom_tippoint(aes(size=`Sample Size`), pch=21, alpha=1, fill="grey50") +
+  geom_text(data=t4$data, aes(label=round(as.numeric(label)))) +
+  geom_tiplab(aes(x=x+0.03, label=NewLabel), size=3.5) +
+#  scale_fill_viridis_c(option="magma", na.value = "black")+
+  scale_colour_viridis_d(option="H") +
+  geom_treescale()+
+  
+  xlim(0,.7)
+
+ggsave("Figure-2/prevosti.jpeg", width=8.5, height=11)
+ggsave("Figure-2/prevosti.pdf", width=8.5, height=11)
+
+```

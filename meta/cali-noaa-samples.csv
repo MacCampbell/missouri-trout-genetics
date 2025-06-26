@@ -1,0 +1,66 @@
+group,NewLabel,Count,Sample Size,Phylogroup,Source
+AlamedaCk,Alameda Creek,45,36,Coastal,LeGall et al. 2024
+AmerRH_Shasta,American River Hatchery-Shasta Strain,16,15,Hatchery strain,LeGall et al. 2024
+AmerR_NimbusH,American River-Nimbus Hatchery,48,40,Central Valley,LeGall et al. 2024
+BattleCk_ColemanH,Coleman Hatchery,77,39,Central Valley,LeGall et al. 2024
+BigCk,Big Creek,51,35,Coastal,LeGall et al. 2024
+BigCk_Devils,Big Creek - Devils,31,31,Coastal,LeGall et al. 2024
+BuckCk_redband,Buck Creek,30,27,Interior Redband,LeGall et al. 2024
+ChagoopaCk,Chagoopa Creek,15,13,Golden Trout Complex,LeGall et al. 2024
+DryCK_WSH,Dry Creek Wash,16,16,Coastal,LeGall et al. 2024
+EagleLk,Eagle Lake,30,29,Central Valley,LeGall et al. 2024
+EelR_VAFS,Eel River,48,39,Coastal,LeGall et al. 2024
+FeatherRH,Feather River Hatchery,64,38,Central Valley,LeGall et al. 2024
+FeatherR_NArmRiceCk,Feather River - Rice Creek,30,29,Central Valley,LeGall et al. 2024
+Foster_Winter,Foster Winter,9,9,Willamette Valley,LeGall et al. 2024
+FreshwaterCk,Freshwater Creek,47,40,Coastal,LeGall et al. 2024
+GoldTroutCk_golden,Golden Trout Creek,29,29,Golden Trout Complex,LeGall et al. 2024
+HiltonCk,Hilton Creek,16,16,Coastal,LeGall et al. 2024
+HorseLintoCk,Horse Linto Creek,48,40,Coastal,LeGall et al. 2024
+HotCkH_Kamloop,Hot Creek Hatchery Kamloops,16,16,Hatchery strain,LeGall et al. 2024
+KernR,Kern River,8,8,Golden Trout Complex,LeGall et al. 2024
+KernR9LakeN,Kern River - Nine Lake,6,6,Golden Trout Complex,LeGall et al. 2024
+LNF_TenMileR,Ten Mile River,46,39,Coastal,LeGall et al. 2024
+MFAmerR,Middle Fork American River,48,37,Central Valley,LeGall et al. 2024
+MFEelR_Summer,Middle Fork Eel River Summer,47,39,Coastal,LeGall et al. 2024
+MadR,Mad River,16,16,Coastal,LeGall et al. 2024
+McKenzie_Summer,McKenzie Summer,26,25,Willamette Valley,LeGall et al. 2024
+MokelumneRH,Mokelumne Rivery Hatchery,415,40,Central Valley,LeGall et al. 2024
+MooseheadCk_redband,Moosehead Creek,15,14,O. m. calisulat,LeGall et al. 2024
+NFClicksCk_LKRgolden,North Fork Clicks Creek,30,30,Golden Trout Complex,LeGall et al. 2024
+NFDeepCk_redband,North Fork Deep Creek,15,15,Interior Redband,LeGall et al. 2024
+NFShieldsCk_redband,North Fork Shields Creek,15,15,Interior Redband,LeGall et al. 2024
+NFSmithRcut,Coastal Cutthroat,16,16,Coastal Cutthroat,LeGall et al. 2024
+PiruCk,Piru Creek,16,15,Coastal,LeGall et al. 2024
+SFDeepCk_redband,South Fork Deep Creek,15,15,Interior Redband,LeGall et al. 2024
+SFShieldsCk_redband,South Fork Shields Creek,15,14,Interior Redband,LeGall et al. 2024
+ShastaR,Shasta River,39,36,Central Valley,LeGall et al. 2024
+SheephavenCk_redband,Sheepheaven Creek,15,13,O. m. calisulat,LeGall et al. 2024
+SoSantiam_Summer,South Santiam Summer,21,21,Willamette Valley,LeGall et al. 2024
+UpMulkeyCk_golden,Upper Mulkey Creek,30,30,Golden Trout Complex,LeGall et al. 2024
+UpWetMeadowCk_LKRgolden,Wet Meadow Creek,19,NA,Golden Trout Complex,LeGall et al. 2024
+WF_SanLuisRey,West Fork San Luis Rey,10,9,Coastal,LeGall et al. 2024
+Willamette_Winter,Williamette Winter,12,12,Willamette Valley,LeGall et al. 2024
+Cold_Lassen_Creek,Cold Lassen Creek,30,29,Interior Redband,Unpublished CDFW
+EDSON CREEK,Edson Creek,57,13,O. m. calisulat,Unpublished CDFW
+FRH_Steelhead,Feather River Hatchery Steelhead,90,39,Hatchery strain,Unpublished CDFW
+Pit River Stn 2,Pit River,29,28,Central Valley,Unpublished CDFW
+RT_Hot_Creek,Hot Creek Hatchery Strain,46,32,Central Valley,Unpublished CDFW
+RT_Kamloops,Kamloops Hatchery Strain,46,38,Hatchery strain,Unpublished CDFW
+RT_Pit,Pit Hatchery Strain,48,39,Hatchery strain,Unpublished CDFW
+RT_Shasta,Shasta Hatchery Strain,46,40,Hatchery strain,Unpublished CDFW
+Upper_Pine_Creek,Upper Pine Creek,31,31,Interior Redband,Unpublished CDFW
+Arlee Spring Spawning,Arlee Spring Spawning,10,8,Missouri Trout,This Study
+Barren Fork,NA,2,NA,NA,This Study
+Blue Springs,Blue Springs,9,8,Missouri Trout,This Study
+Crane Creek,Crane Creek,51,35,Missouri Trout,This Study
+Current,Current,10,10,Missouri Trout,This Study
+EED Erwin/Arlee Domestic,EED Erwin/Arlee Domestic,7,NA,Missouri Trout,This Study
+Eleven Point,Eleven Point,8,8,Missouri Trout,This Study
+Mill Creek,Mill Creek,33,30,Missouri Trout,This Study
+Montauk Fish Lake,Montauk Fish Lake,12,9,Missouri Trout,This Study
+North ForkOf the White,North ForkOf the White,36,33,Missouri Trout,This Study
+Piney Creek -- Lane Spring,Piney Creek -- Lane Spring,13,10,Missouri Trout,This Study
+Shepherd Fall Spawning,Shepherd Fall Spawning,12,10,Missouri Trout,This Study
+Spring Creek,Spring Creek,23,19,Missouri Trout,This Study
+Spring River,Spring River,9,9,Missouri Trout,This Study
